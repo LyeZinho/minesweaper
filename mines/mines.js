@@ -89,6 +89,19 @@ function generateMines(seed, width, height, mines){
         }
     }
 
+    // Prevent null or undefined values in the field
+    // Loop through the backfield and forefield replacing null values
+    for(var i = 0; i < height; i++){
+        for(var j = 0; j < width; j++){
+            if(field[i][j] == null){
+                field[i][j] = 0;
+            }
+            if(foreField[i][j] == null){
+                foreField[i][j] = 0;
+            }
+        }
+    }
+
     return {
         seed: seed,
         state: field,
@@ -140,7 +153,6 @@ y
 
 
 function openField(field, fore, x, y){
-
     if(field[y][x] == "M"){
         // Reveal map
         for(var i = 0; i < field.length; i++){
@@ -148,6 +160,19 @@ function openField(field, fore, x, y){
                 fore[i][j] = field[i][j];
             }
         }
+        // Prevent null or undefined values in the field
+        // Loop through the backfield and forefield replacing null values
+        for(var i = 0; i < field.length; i++){
+            for(var j = 0; j < field[0].length; j++){
+                if(field[i][j] == null){
+                    field[i][j] = 0;
+                }
+                if(fore[i][j] == null){
+                    fore[i][j] = 0;
+                }
+            }
+        }
+
         return {
             end: true,
             fore: fore
@@ -173,6 +198,19 @@ function openField(field, fore, x, y){
         }
     }
 
+    // Prevent null or undefined values in the field
+    // Loop through the backfield and forefield replacing null values
+    for(var i = 0; i < field.length; i++){
+        for(var j = 0; j < field[0].length; j++){
+            if(field[i][j] == null){
+                field[i][j] = 0;
+            }
+            if(fore[i][j] == null){
+                fore[i][j] = 0;
+            }
+        }
+    }
+
     return {
         end: false,
         fore: fore
@@ -182,33 +220,15 @@ function openField(field, fore, x, y){
 
 // // Test
 
-// var field = generateMines(125, 10, 10, 20);
-// var open = openField(field.state, field.fore, 0, 0)
+var field = generateMines(125, 10, 10, 20);
+var open = openField(field.state, field.fore, 3, 0);
 
-// // Show the field in string TEST
+// console.log(open.fore);
 
-// var fieldString = "";
-// for(var i = 0; i < field.state.length; i++){
-//     for(var j = 0; j < field.state[0].length; j++){
-//         fieldString += field.state[i][j] + " ";
-//     }
-//     fieldString += "\r \n";
-// }
-
-// // Show the fore field in string TEST
-
-// var foreString = "";
-// for(var i = 0; i < open.fore.length; i++){
-//     for(var j = 0; j < open.fore[0].length; j++){
-//         foreString += open.fore[i][j] + " ";
-//     }
-//     foreString += "\r \n";
-// }
-
-
-
-// console.log(fieldString);
-// console.log(foreString);
+// Show in string format
+for(var i = 0; i < open.fore.length; i++){
+    console.log(open.fore[i].join(" "));
+}
 
 
 
@@ -259,7 +279,7 @@ function saveGame(currentFore, seed){
         }
     }
     saveString += "|" + seed;
-    return saveString;
+    return saveString;    
 }
 
 // Test
@@ -283,34 +303,83 @@ function loadGame(saveString){
         }
         foreField[Math.floor(i / 10)].push(saveArray[i]);
     }
+    // Prevent data loss
+    // Loop through the forefield replacing null and undefined vaules with 0
+    // Adding the same amount of x or y 
+    /*
+    Example:
+
+    0 0 0 0 0 0 1 * * * <- Get count of indexes in the 1ºst row 
+    1 1 1 1 2 3 3 * * *
+    * * * * * * * * * *
+    * * * * * * * * * *
+    * * * * * * * * * *
+    * * * * * * * * * *
+    * * * * * * * * * *
+    * * * * * * * * * *
+    * * * * * * * * * *
+    * * * * * * * * * * 
+    0 0 0 0 0 0 0 0 0   <- Verify if the amount is the same if not and values contains null or undefined
+    Cut off the row from the array
+    */
+
+    var count = 0;
+    for(var i = 0; i < foreField[0].length; i++){
+        if(foreField[0][i] == null || foreField[0][i] == undefined){
+            count++;
+        }
+    }
+
+    for(var i = 0; i < foreField.length; i++){
+        if(foreField[i].length != foreField[0].length - count){
+            foreField.splice(i, 1);
+        }
+    }
+
+    for(var i = 0; i < foreField.length; i++){
+        for(var j = 0; j < foreField[0].length; j++){
+            if(foreField[i][j] == null || foreField[i][j] == undefined){
+                foreField[i][j] = 0;
+            }
+        }
+    }
+
     return {
-        seed: seed,
-        fore: foreField
+        fore: foreField,
+        seed: seed
     };
+
 }
 
 // Test
 
-var field = generateMines(125, 10, 10, 10);
-var open = openField(field.state, field.fore, 7, 0)
+// Show in string format
 
-console.log(field);
+// var field = generateMines(125, 10, 10, 20);
+// var open = openField(field.state, field.fore, 0, 0)
 
-var save = saveGame(open.fore, field.seed);
+// var save = saveGame(open.fore, field.seed);
+// console.log(save);
 
-var load = loadGame(save);
+// var load = loadGame(save);
+// console.log(load);
 
-console.log(load);
+// let loadString = "";
 
-// Show load in string TEST
+// for(var i = 0; i < load.fore.length; i++){
+//     for(var j = 0; j < load.fore[0].length; j++){
+//         loadString += load.fore[i][j] + " ";
+//     }
+//     loadString += "\n";
+// }
 
-var loadString = "";
-for(var i = 0; i < load.fore.length; i++){
-    for(var j = 0; j < load.fore[0].length; j++){
-        loadString += load.fore[i][j] + " ";
-    }
-    loadString += "\r \n";
+// console.log(loadString);
+
+// Export
+
+module.exports = {
+    generateMines: generateMines,
+    openField: openField,
+    saveGame: saveGame,
+    loadGame: loadGame
 }
-
-console.log(loadString);
-
