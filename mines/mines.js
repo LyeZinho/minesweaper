@@ -152,69 +152,11 @@ y
 */
 
 
+/*
+    Cartesian starts on 0 for y and x
+*/
 function openField(field, fore, x, y){
-    if(field[y][x] == "M"){
-        // Reveal map
-        for(var i = 0; i < field.length; i++){
-            for(var j = 0; j < field[0].length; j++){
-                fore[i][j] = field[i][j];
-            }
-        }
-        // Prevent null or undefined values in the field
-        // Loop through the backfield and forefield replacing null values
-        for(var i = 0; i < field.length; i++){
-            for(var j = 0; j < field[0].length; j++){
-                if(field[i][j] == null){
-                    field[i][j] = 0;
-                }
-                if(fore[i][j] == null){
-                    fore[i][j] = 0;
-                }
-            }
-        }
 
-        return {
-            end: true,
-            fore: fore
-        };
-    }
-    
-    if(fore[y][x] != "*"){
-        return {
-            end: false,
-            fore: fore
-        };
-    }
-
-    fore[y][x] = field[y][x];
-
-    if(field[y][x] == 0){
-        for(var i = -1; i <= 1; i++){
-            for(var j = -1; j <= 1; j++){
-                if(y + i >= 0 && y + i < field.length && x + j >= 0 && x + j < field[0].length){
-                    openField(field, fore, x + j, y + i);
-                }
-            }
-        }
-    }
-
-    // Prevent null or undefined values in the field
-    // Loop through the backfield and forefield replacing null values
-    for(var i = 0; i < field.length; i++){
-        for(var j = 0; j < field[0].length; j++){
-            if(field[i][j] == null){
-                field[i][j] = 0;
-            }
-            if(fore[i][j] == null){
-                fore[i][j] = 0;
-            }
-        }
-    }
-
-    return {
-        end: false,
-        fore: fore
-    };
 }
 
 
