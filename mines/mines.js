@@ -153,7 +153,7 @@ function openField(field, fore, x, y){
             fore: fore
         };
     }
-
+    
     if(fore[y][x] != "*"){
         return {
             end: false,
@@ -291,8 +291,10 @@ function loadGame(saveString){
 
 // Test
 
-var field = generateMines(125, 10, 10, 1);
-var open = openField(field.state, field.fore, 0, 0)
+var field = generateMines(125, 10, 10, 10);
+var open = openField(field.state, field.fore, 7, 0)
+
+console.log(field);
 
 var save = saveGame(open.fore, field.seed);
 
