@@ -157,20 +157,72 @@ y
 */
 function openField(field, fore, x, y){
 
+    var y = y;
+    var x = x;
+    var field = field;
+    var fore = fore;
+
+    if(fore[y][x] == "*"){
+        fore[y][x] = field[y][x];
+    }
+
+    // If open field
+    if(field[y][x] == 0){
+        for(var i = -1; i <= 1; i++){
+            for(var j = -1; j <= 1; j++){
+                if(y + i >= 0 && y + i < field.length && x + j >= 0 && x + j < field[0].length){
+                    if(fore[y + i][x + j] == "*"){
+                        fore[y + i][x + j] = field[y + i][x + j];
+                        if(field[y + i][x + j] == 0){
+                            openField(field, fore, x + j, y + i);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // IF mine reveal map
+    if(field[y][x] == "M"){
+        for(var i = 0; i < field.length; i++){
+            for(var j = 0; j < field[i].length; j++){
+                if(field[i][j] == "M"){
+                    fore[i][j] = "M";
+                }
+            }
+        }
+
+        return {
+            state: field,
+            fore: fore,
+            end: true
+        }
+    }
+
+    return {
+        state: field,
+        fore: fore,
+        end: false
+    }
 }
 
 
 // // Test
 
-var field = generateMines(125, 10, 10, 20);
-var open = openField(field.state, field.fore, 3, 0);
+// var field = generateMines(125, 10, 10, 20);
+// var open = openField(field.state, field.fore, 4, 2);
 
-// console.log(open.fore);
+// console.log(open);
+// // Render in string
+// var render = "";
+// for(var i = 0; i < open.fore.length; i++){
+//     for(var j = 0; j < open.fore[i].length; j++){
+//         render += open.fore[i][j] + " ";
+//     }
+//     render += "\n";
+// }
 
-// Show in string format
-for(var i = 0; i < open.fore.length; i++){
-    console.log(open.fore[i].join(" "));
-}
+// console.log(render);
 
 
 

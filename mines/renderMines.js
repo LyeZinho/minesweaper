@@ -158,13 +158,13 @@ function addPos(fieldStr){
     for(var i = 1; i < nonWhiteSpaces; i++){
         str += "--";
     }
-    str += "xy\r \n";
+    str += "--xy\r \n";
 
     // Before each line add the ⁞ border and the 1~... pos numbers the start is in 0 and the end is in ...
-    var line = 1;
+    var line = 0;
     for(var i = 0; i < fieldStr.length; i++){
         if(fieldStr[i] == "\r \n" || fieldStr[i] == "\r"){
-            str += " ⁞" + line;
+            str += " ⁞ " + line;
             line++;
         }
         str += fieldStr[i];
@@ -175,7 +175,7 @@ function addPos(fieldStr){
 }
 
 // Test
-var field = generateMines(125, 10, 10, 20);
+var field = generateMines(125, 20, 20, 50);
 var open = openField(field.state, field.fore, 3, 7)
 
 var fieldStr = renderMines(open.fore);
