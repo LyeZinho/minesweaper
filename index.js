@@ -3,8 +3,8 @@ Discord bot
 */
 //Dotenv
 // Host for replit
-const express = require('express');
-const app = express();
+// const express = require('express');
+// const app = express();
 
 
 const path = require('path');
@@ -107,7 +107,7 @@ main();
 
 // // Server for replit
 
-app.listen(3000, () => {
-    console.log('Listening on port 3000');
-    console.log('server started');
-});
+// app.listen(3000, () => {
+//     console.log('Listening on port 3000');
+//     console.log('server started');
+// });
