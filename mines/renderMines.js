@@ -175,11 +175,18 @@ function addPos(fieldStr){
 }
 
 // Test
-var field = generateMines(125, 20, 20, 50);
-var open = openField(field.state, field.fore, 3, 7)
+// var field = generateMines(125239132, 10, 10, 50);
+// var open = openField(field.state, field.fore, 3, 7)
 
-var fieldStr = renderMines(open.fore);
+// var fieldStr = renderMines(open.fore);
 
-console.log(addPos(fieldStr));
+// console.log(addPos(fieldStr));
+
+
+// Export
+module.exports = {
+    renderMines: renderMines,
+    addPos: addPos
+}
 
 
