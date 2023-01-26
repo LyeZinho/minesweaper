@@ -369,11 +369,44 @@ function loadGame(saveString){
 
 // console.log(loadString);
 
+
+// Calc score
+
+function calcScore(currentFore, backField){
+    var score = 0;
+    for(var i = 0; i < currentFore.length; i++){
+        for(var j = 0; j < currentFore[0].length; j++){
+            if(currentFore[i][j] == backField[i][j]){
+                score++;
+            }
+        }
+    }
+    return score;
+}
+
+// Test
+
+var field = generateMines(125, 10, 10, 20);
+var open = openField(field.state, field.fore, 0, 0)
+
+var save = saveGame(open.fore, field.seed);
+console.log(save);
+
+var load = loadGame(save);
+console.log(load);
+
+var score = calcScore(load.fore, field.state);
+console.log(score);
+
+
+
+
 // Export
 
 module.exports = {
     generateMines: generateMines,
     openField: openField,
     saveGame: saveGame,
-    loadGame: loadGame
+    loadGame: loadGame,
+    calcScore: calcScore
 }

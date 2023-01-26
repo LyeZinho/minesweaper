@@ -4,57 +4,98 @@ Player contains:
     - Uid
     - Score
     - Time
+
 */
 
 
-const Client = require("@replit/database");
+// Save data in ./data/
 
-const client = new Client();
+// Imports
+var fs = require("fs");
+var path = require("path");
 
 
-class Player {
-    constructor(uid) {
+// Player class
+class Player{
+    constructor(uid, score, time){
         this.uid = uid;
         this.score = score;
-        this.time = time;
     }
 
-    async save() {
-        await client.set(this.uid, JSON.stringify(this));
-    }
-
-    static async load(uid) {
-        return JSON.parse(await client.get(uid));
-    }
-
-    static async delete(uid) {
-        await client.delete(uid);
-    }
-
-    static async getTop() {
-        const top = await client.list();
-        const topPlayers = [];
-        for (const player of top) {
-            topPlayers.push(await Player.load(player));
+    // Create player
+    createPlayer(){
+        var player = {
+            uid: this.uid,
+            score: this.score,
+            time: this.time
         }
-        return topPlayers.sort((a, b) => b.score - a.score);
+        return player;
     }
 
-    static async getTopTime() {
-        const top = await client.list();
-        const topPlayers = [];
-        for (const player of top) {
-            topPlayers.push(await Player.load(player));
-        }
-        return topPlayers.sort((a, b) => a.time - b.time);
+    // Save player
+    savePlayer(){
+        var player = this.createPlayer();
+        var data = JSON.stringify(player);
+        // Create new json file
+        fs.writeFile(path.join(__dirname, "data", this.uid + ".json"), data, function(err){
+            if(err){
+                console.log(err);
+            }
+        });
     }
 
-    static async getTopScore() {
-        const top = await client.list();
-        const topPlayers = [];
-        for (const player of top) {
-            topPlayers.push(await Player.load(player));
-        }
-        return topPlayers.sort((a, b) => b.score - a.score);
+    // Load player
+    loadPlayer(){
+        var player = JSON.parse(fs.readFileSync(path.join(__dirname, "data", this.uid + ".json")));
+        this.uid = player.uid;
+        this.score = player.score;
+        this.time = player.time;
     }
+
+    // Delete player
+    deletePlayer(){
+        fs.unlink(path.join(__dirname, "data", this.uid + ".json"), function(err){
+            if(err){
+                console.log(err);
+            }
+        });
+    }
+
+    // Update player
+    updatePlayer(){
+        this.deletePlayer();
+        this.savePlayer();
+    }
+
+    // Increase score
+    increaseScore(score){
+        this.score += score;
+        this.updatePlayer();
+    }
+
+    // Decrease score
+    decreaseScore(score){
+        this.score -= score;
+        this.updatePlayer();
+    }
+
 }
+
+
+// Tests
+
+// var player = new Player("123456789", 10, 0);
+// player.savePlayer();
+
+
+// var player = new Player("123456789", 0, 0);
+// player.loadPlayer();
+// console.log(player);
+
+
+// var player = new Player("123456789", 0, 0);
+// player.deletePlayer();
+
+
+
+
